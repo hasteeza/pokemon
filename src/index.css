@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme{
+    --breakpoint-xs: 360px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+    --breakpoint-3xl: 1920px; /* Optional ultra-wide screens */
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes bounceRight {
+  0%,
+  100% {
+    transform: translateX(0) scale(1.5);
+  }
+  50% {
+    transform: translateX(40px) scale(1.5);
+  }
+}
+
+@keyframes bounceLeft {
+  0%,
+  100% {
+    transform: translateX(0) scale(1.5);
+  }
+  50% {
+    transform: translateX(-40px) scale(1.5);
+  }
+}
+
+@keyframes hit {
+  0%,
+  100% {
+    transform: scale(1.5);
+  }
+  20%,
+  60% {
+    transform: scale(1.5) translateX(5px);
+  }
+  40%,
+  80% {
+    transform: scale(1.5) translateX(-5px);
+  }
+}
+
+@keyframes victory {
+  0%,
+  100% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(1.8);
+  }
+}
+
+.animate-bounce-right {
+  animation: bounceRight 0.8s ease-in-out;
+}
+
+.animate-bounce-left {
+  animation: bounceLeft 0.8s ease-in-out;
+}
+
+.animate-hit {
+  animation: hit 0.5s ease-in-out;
+}
+
+.animate-victory {
+  animation: victory 1s ease-in-out infinite;
+}

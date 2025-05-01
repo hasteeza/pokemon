@@ -2,7 +2,8 @@
  * API service for interacting with json-server
  */
 
-const API_URL = "https://json-server-pokedex.onrender.com/"
+// ✅ Use environment variable for flexibility across environments
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001"
 
 // Team operations
 export const fetchTeams = async () => {
@@ -106,10 +107,8 @@ export const removeFavorite = async (pokemonId) => {
 }
 
 // Battle operations
-// Update the fetchBattles function to avoid caching
 export const fetchBattles = async () => {
   try {
-    // Add timestamp to prevent caching
     const timestamp = new Date().getTime()
     const response = await fetch(`${API_URL}/battles?_=${timestamp}`, {
       headers: {
@@ -118,11 +117,7 @@ export const fetchBattles = async () => {
         Expires: "0",
       },
     })
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch battles: ${response.statusText}`)
-    }
-
+    if (!response.ok) throw new Error(`Failed to fetch battles: ${response.statusText}`)
     return await response.json()
   } catch (error) {
     console.error("Error fetching battles:", error)
@@ -140,11 +135,7 @@ export const saveBattle = async (battleData) => {
       },
       body: JSON.stringify(battleData),
     })
-
-    if (!response.ok) {
-      throw new Error(`Failed to save battle: ${response.statusText}`)
-    }
-
+    if (!response.ok) throw new Error(`Failed to save battle: ${response.statusText}`)
     return await response.json()
   } catch (error) {
     console.error("Error saving battle:", error)
@@ -152,12 +143,10 @@ export const saveBattle = async (battleData) => {
   }
 }
 
-// Update the deleteBattleById function to better handle not found errors
 export const deleteBattleById = async (battleId) => {
   try {
     console.log(`Attempting to delete battle with ID: ${battleId}`)
 
-    // First check if the battle exists
     try {
       const checkResponse = await fetch(`${API_URL}/battles/${battleId}`, {
         headers: {
@@ -165,17 +154,14 @@ export const deleteBattleById = async (battleId) => {
         },
       })
 
-      // If battle doesn't exist, return success (already deleted)
       if (checkResponse.status === 404) {
         console.log(`Battle with ID ${battleId} not found, considering it already deleted`)
         return true
       }
     } catch (checkError) {
       console.log(`Error checking if battle ${battleId} exists:`, checkError)
-      // Continue with deletion attempt even if check fails
     }
 
-    // Try to delete the battle
     const response = await fetch(`${API_URL}/battles/${battleId}`, {
       method: "DELETE",
       headers: {
@@ -186,7 +172,6 @@ export const deleteBattleById = async (battleId) => {
     })
 
     if (!response.ok) {
-      // If not found during deletion, it might have been deleted by another process
       if (response.status === 404) {
         console.log(`Battle with ID ${battleId} not found during deletion, considering it already deleted`)
         return true
@@ -198,9 +183,7 @@ export const deleteBattleById = async (battleId) => {
     return true
   } catch (error) {
     console.error(`Error deleting battle with ID ${battleId}:`, error)
-    // Don't throw for 404 errors
     if (error.message && error.message.includes("Not Found")) {
-      console.log(`Battle with ID ${battleId} not found, considering it already deleted`)
       return true
     }
     throw error
@@ -210,18 +193,15 @@ export const deleteBattleById = async (battleId) => {
 export const deleteBattle = async () => {
   try {
     const battles = await fetchBattles()
-
     for (const battle of battles) {
       await deleteBattleById(battle.id)
     }
-
     return true
   } catch (error) {
     console.error("Error deleting all battles:", error)
     throw error
   }
 }
-
 
 // PokéAPI v2 operations
 export const POKE_API_URL = "https://pokeapi.co/api/v2"

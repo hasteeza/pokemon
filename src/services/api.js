@@ -2,7 +2,7 @@
  * API service for interacting with json-server
  */
 
-const API_URL = "http://localhost:3001"
+const API_URL = "https://json-server-pokedex.onrender.com/"
 
 // Team operations
 export const fetchTeams = async () => {
